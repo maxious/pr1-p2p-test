@@ -1,0 +1,34 @@
+== kernel: 7.3.0-rc7-xe-perf-pr1-p2p
+== device: /dev/nvme0n1 render=/dev/dri/renderD128 size=512MiB block=64MiB chunk=128MiB off=4294967296
+
+-- 1. baseline: device -> host RAM (io_uring READ_FIXED, O_DIRECT)
+LEG host   bytes=536870912 wall=0.161s GBps=3.10 cpu_ms=5 maxrss_kb=66948
+
+-- 2. PR route B: device -> VRAM BO dma-buf (io_uring registered dmabuf buffer)
+VRAM BO handle=1 size_mib=64 dmabuf_fd=6 cpu_map=0x7ec2f8c00000
+LEG vrambo bytes=536870912 wall=0.122s GBps=4.11 cpu_ms=1 maxrss_kb=2280
+VERIFY MATCH (first 32MiB of the BO vs the same range in host RAM)
+
+-- 3. correctness: same range read into host RAM and into VRAM, byte compare
+VERIFY MATCH host_first=3b204d6f vram_first=3b204d6f
+
+-- 4. PR route A: pread() straight into the carve-out chunk mapping
+LEG pread  bytes=536870912 wall=0.130s GBps=3.86 cpu_ms=9 maxrss_kb=67080
+
+-- 5. negative control: the chunk fd is an anon inode, so registering it as a dmabuf must fail
+EXPECTED-FAIL register chunk fd as dmabuf: Invalid argument (chunk fd is an anon inode, not a dma_buf)
+
+-- 6. carve-out state
+/sys/bus/pci/devices/0000:0d:00.0/p2pmem/:
+total 0
+-rw-rw---- 1 root root 1099511627776 Oct 18 23:26 allocate
+-r--r--r-- 1 root root          4096 Oct 18 23:26 available
+-r--r--r-- 1 root root          4096 Oct 18 23:26 published
+-r--r--r-- 1 root root          4096 Oct 18 23:26 size
+
+/sys/bus/pci/devices/0000:11:00.0/p2pmem/:
+total 0
+-rw-rw---- 1 root root 1099511627776 Oct 18 23:26 allocate
+-r--r--r-- 1 root root          4096 Oct 18 23:26 available
+-r--r--r-- 1 root root          4096 Oct 18 23:26 published
+-r--r--r-- 1 root root          4096 Oct 18 23:26 size

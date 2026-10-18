@@ -1,0 +1,15 @@
+LEG host   bytes=4294967296 wall=0.757s GBps=5.29 cpu_ms=37 maxrss_kb=67076
+
+ Performance counter stats for 'system wide':
+
+                 0      dram_channel_data_controller_4   #   5139.5 MiB  nps1_die_to_dram       (49.82%)
+        35,460,708      dram_channel_data_controller_1                                          (49.96%)
+                 0      dram_channel_data_controller_6                                          (50.10%)
+                 0      dram_channel_data_controller_3                                          (50.21%)
+        36,285,815      dram_channel_data_controller_0                                          (50.18%)
+                 0      dram_channel_data_controller_5                                          (50.04%)
+        12,507,849      dram_channel_data_controller_2                                          (49.90%)
+                 0      dram_channel_data_controller_7                                          (49.79%)
+
+       0.771196936 seconds time elapsed
+

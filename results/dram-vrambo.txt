@@ -1,0 +1,17 @@
+VRAM BO handle=1 size_mib=64 dmabuf_fd=6 cpu_map=0x781bf4e00000
+LEG vrambo bytes=4294967296 wall=0.782s GBps=5.11 cpu_ms=7 maxrss_kb=3644
+VERIFY MATCH (first 32MiB of the BO vs the same range in host RAM)
+
+ Performance counter stats for 'system wide':
+
+                 0      dram_channel_data_controller_4   #    433.3 MiB  nps1_die_to_dram       (49.99%)
+         2,855,999      dram_channel_data_controller_1                                          (49.99%)
+                 0      dram_channel_data_controller_6                                          (49.99%)
+                 0      dram_channel_data_controller_3                                          (50.00%)
+         3,692,342      dram_channel_data_controller_0                                          (50.01%)
+                 0      dram_channel_data_controller_5                                          (50.01%)
+           555,146      dram_channel_data_controller_2                                          (50.01%)
+                 0      dram_channel_data_controller_7                                          (50.00%)
+
+       2.263464941 seconds time elapsed
+
